@@ -6,9 +6,9 @@ from screenplay_pdf_to_json.utils import isCharacter, isParenthetical, extractCh
 LAST_SCENE = -2
 
 
-def groupSections(topTrends, script, pageStart, includeSceneNumber):
+def groupSections(topTrends, script, pageStart, includeSceneNumber, isDiamond):
     """group types into the same sections"""
-    newScript = categorizeSections(topTrends, script, pageStart, includeSceneNumber)
+    newScript = categorizeSections(topTrends, script, pageStart, includeSceneNumber, isDiamond)
     newScript = combineCategories(newScript, pageStart)
     newScript = divideParentheticals(newScript)
     return newScript
@@ -109,11 +109,12 @@ def getJoinedText(textArr):
                      for arr in textArr])
 
 
-def categorizeSections(topTrends, script, pageStart, includeSceneNumber):
+def categorizeSections(topTrends, script, pageStart, includeSceneNumber, isDiamond):
     """categorize lines into types"""
 
     finalSections = []
     sceneNumber = 0
+
     for page in script:
         if page["page"] < pageStart:
             continue
@@ -177,7 +178,7 @@ def categorizeSections(topTrends, script, pageStart, includeSceneNumber):
                 characterOccurred = False
             elif isAction:
                 # if Heading is multi-line
-                if i > 0 and len(finalSections[-1]["content"][-1]["scene"]) == 0 and y - page["content"][i-1]["segment"][-1]["y"] < 24:
+                if not isDiamond and i > 0 and len(finalSections[-1]["content"][-1]["scene"]) == 0 and y - page["content"][i-1]["segment"][-1]["y"] < 24:
                     finalSections[-1]["content"][-1]["scene_info"]["location"] += " " + text
                 else:
                     finalSections[-1]["content"][-1]["scene"].append({
