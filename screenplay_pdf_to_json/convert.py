@@ -23,7 +23,7 @@ def convert(scriptFile, pageStart):
     firstPages = firstPagesDict["firstPages"]
     skipPage = pageStart if pageStart else firstPagesDict["pageStart"]
 
-    title = extractTitle(firstPages[0])
+    title = extractTitle(firstPages[0]) if firstPages else None
     isDiamond = title is not None and title.lower() == "the diamond age"
 
     # remove any useless line (page number, empty line, special symbols)
